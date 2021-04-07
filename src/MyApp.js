@@ -6,16 +6,25 @@ import axios from 'axios';
 function MyApp(){
     const [characters, setCharacters] = useState([]);
 
+    async function fetchAll(){
+        try{
+            const response = await axios.get('http://localhost:5000/users');
+            return response.data.users_list;
+        }
+        catch(error){
+            //No handling, only logging
+            console.log(error);
+            return false;
+        }
+    }
+
     useEffect(() => {
-        axios.get('http://localhost:5000/users')
-            .then(res => {
-                setCharacters(res.data.users_list)
-            })
-            .catch(function (error) {
-                //Not handling, only logging
-                console.log(error);
-            });
-    }, [])
+        fetchAll().then (result => {
+            if(result)
+                setCharacters(result);
+        });
+    }, []);
+
     function removeOneCharacter (index) {
         const updated = characters.filter((character, i) => {
             return i !== index
