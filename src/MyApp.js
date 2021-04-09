@@ -36,17 +36,26 @@ function MyApp(){
         });
     }, []);
 
-    function removeOneCharacter (index) {
+    async function removeOneCharacter (index, id) {
         const updated = characters.filter((character, i) => {
             return i !== index
         });
         setCharacters(updated);
+
+        try{
+            const response = await axios.delete('http://localhost:5000/users/' + id);
+            return response.data;
+        }
+        catch(error){
+            console.log(error);
+            return false;
+        }
     }
 
     function updateList(person){
         makePostCall(person).then( result => {
             if(result)
-                setCharacters([...characters, person]);
+                setCharacters([...characters, result]);
         });
     }
     return(
